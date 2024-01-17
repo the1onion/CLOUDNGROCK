@@ -10,9 +10,7 @@ runs-on: windows-latest
 steps:
 - name: Download
 
-run: Invoke-WebRequest
-
-https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
+run: Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
 
 - name: Extract
 
@@ -29,10 +27,10 @@ secrets.CLOUD_NGROK }}
 - name: Enable TS
 
 run: Set-ItemProperty -Path
-'HKLM:\System\CurrentControlSet\Control\TerminalServer'-name "fDenyTSConnections" -Value 0
+'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
 - run: Enable-NetFirewallRule -DisplayGroup "RemoteDesktop"
 - run: Set-ItemProperty -Path
-'HKLM:\System\CurrentControlSet\Control\TerminalServer\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
 
 - run: Set-LocalUser -Name "winadmin" -Password(ConvertTo-SecureString -AsPlainText "QWErty654#@!" -Force)
 - name: Create Tunnel
