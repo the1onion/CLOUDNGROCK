@@ -8,31 +8,28 @@ build:
 runs-on: windows-latest
 
 steps:
-- name: Download
+  - name: Download
 
-run: Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
+    run: Invoke-WebRequest https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
 
-- name: Extract
+  - name: Extract
 
-run: Expand-Archive ngrok.zip
-- name: Auth
+    run: Expand-Archive ngrok.zip
 
-run: .\ngrok\ngrok.exe authtoken
-$Env:CLOUD_NGROK
+  - name: Auth
 
-env:
-CLOUD_NGROK: ${{
-secrets.CLOUD_NGROK }}
+    run: .\ngrok\ngrok.exe authtoken $Env:CLOUD_NGROK
 
-- name: Enable TS
+    env:
+    
+        CLOUD_NGROK: ${{secrets.CLOUD_NGROK }}
 
-run: Set-ItemProperty -Path
-'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
-- run: Enable-NetFirewallRule -DisplayGroup "RemoteDesktop"
-- run: Set-ItemProperty -Path
-'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+  - name: Enable TS
 
-- run: Set-LocalUser -Name "winadmin" -Password(ConvertTo-SecureString -AsPlainText "QWErty654#@!" -Force)
-- name: Create Tunnel
+    run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+  - run: Enable-NetFirewallRule -DisplayGroup "RemoteDesktop"
+  - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
 
-run: .\ngrok\ngrok.exe tcp 3389
+  - run: Set-LocalUser -Name "winadmin" -Password(ConvertTo-SecureString -AsPlainText "QWErty654#@!" -Force)
+  - name: Create Tunnel  
+	  run: .\ngrok\ngrok.exe tcp 3389
